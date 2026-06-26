@@ -1,0 +1,160 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  phone        String
+  email        String           @unique
+  passwordHash String
+  role         String           @default("operator") // "admin" or "operator"
+  isActive     Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  
+  // Relations
+  createdOrders  Order[]          @relation("OrderCreatedBy")
+  assignedOrders Order[]          @relation("OrderAssignedTo")
+  statusLogs     OrderStatusLog[]
+  notes          OrderNote[]
+  inventoryLogs  InventoryLog[]
+}
+
+model Customer {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  email     String?
+  address   String?
+  notes     String?
+  createdAt DateTime @default(now())
+  
+  // Relations
+  orders    Order[]
+}
+
+model Product {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  name      String      // e.g. "Wedding Card", "Visiting Card"
+  category  String      // e.g. "Cards", "Large Format"
+  basePrice Float
+  unit      String      // e.g. "per piece", "per sq ft"
+  isActive  Boolean     @default(true)
+  
+  // Relations
+  orderItems OrderItem[]
+}
+
+model Order {
+  id                  String           @id @default(auto()) @map("_id") @db.ObjectId
+  orderNumber         String           @unique // ORD-YYYYMMDD-NNN
+  customerId          String           @db.ObjectId
+  createdById         String           @db.ObjectId
+  assignedToId        String?          @db.ObjectId
+  status              String           @default("new") // "new", "designing", "printing", "ready", "delivered"
+  deliveryDate        DateTime
+  totalAmount         Float            @default(0)
+  paidAmount          Float            @default(0)
+  dueAmount           Float            @default(0)
+  designFileUrl       String?
+  qrCodeData          String?          // QR code base64 or status tracking link
+  orderPhoto          String?          // Base64 data URL of the order photo captured via camera
+  specialInstructions String?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  // Relations
+  customer   Customer         @relation(fields: [customerId], references: [id])
+  createdBy  User             @relation("OrderCreatedBy", fields: [createdById], references: [id])
+  assignedTo User?            @relation("OrderAssignedTo", fields: [assignedToId], references: [id])
+  items      OrderItem[]
+  payments   Payment[]
+  statusLogs OrderStatusLog[]
+  notes      OrderNote[]
+}
+
+model OrderItem {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId     String   @db.ObjectId
+  productId   String?  @db.ObjectId
+  description String
+  quantity    Int
+  unitPrice   Float
+  totalPrice  Float
+
+  // Relations
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id])
+}
+
+model Payment {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId     String   @db.ObjectId
+  amount      Float
+  method      String   // "cash", "upi", "card", "bank_transfer"
+  type        String   // "advance", "partial", "final"
+  note        String?
+  paymentDate DateTime @default(now())
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model OrderStatusLog {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId      String   @db.ObjectId
+  updatedById  String   @db.ObjectId
+  fromStatus   String
+  toStatus     String
+  note         String?
+  changedAt    DateTime @default(now())
+
+  // Relations
+  order     Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  updatedBy User  @relation(fields: [updatedById], references: [id])
+}
+
+model OrderNote {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId     String   @db.ObjectId
+  createdById String   @db.ObjectId
+  note        String
+  createdAt   DateTime @default(now())
+
+  // Relations
+  order     Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  createdBy User  @relation(fields: [createdById], references: [id])
+}
+
+model InventoryItem {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  category     String         // e.g. "Paper", "Ink", "Finishing"
+  quantity     Float          @default(0)
+  unit         String         // e.g. "reams", "liters", "rolls"
+  minThreshold Float          @default(0)
+  updatedAt    DateTime       @updatedAt
+  
+  // Relations
+  logs         InventoryLog[]
+}
+
+model InventoryLog {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  itemId         String        @db.ObjectId
+  action         String        // "added", "used", "adjusted"
+  quantityChange Float
+  quantityAfter  Float
+  note           String?
+  updatedById    String        @db.ObjectId
+  createdAt      DateTime      @default(now())
+
+  // Relations
+  item      InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  updatedBy User          @relation(fields: [updatedById], references: [id])
+}
