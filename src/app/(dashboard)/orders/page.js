@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import PageHeader from '@/components/PageHeader';
 import StatusBadge from '@/components/StatusBadge';
@@ -18,6 +19,57 @@ export default function OrdersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [viewMode, setViewMode] = useState('board'); // 'list' or 'board' by default
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Toast logic for deleted orders
+  const [deletedOrderToast, setDeletedOrderToast] = useState({ show: false, id: null, status: '' });
+  const [restoring, setRestoring] = useState(false);
+
+  useEffect(() => {
+    const deletedId = searchParams.get('deletedOrder');
+    if (deletedId) {
+      setDeletedOrderToast({ show: true, id: deletedId, status: 'deleted' });
+      // Remove query param without reloading page
+      router.replace('/orders', { scroll: false });
+    }
+  }, [searchParams, router]);
+
+  const handleUndoDelete = async (id) => {
+    setRestoring(true);
+    try {
+      const res = await fetch(`/api/orders/${id}/restore`, { method: 'POST' });
+      if (res.ok) {
+        setDeletedOrderToast({ show: true, id: id, status: 'restored' });
+        // Refresh orders list
+        refreshOrders();
+        setTimeout(() => setDeletedOrderToast({ show: false, id: null, status: '' }), 5000);
+      } else {
+        alert('Failed to restore order');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error restoring order');
+    }
+    setRestoring(false);
+  };
+
+  const handleRedoDelete = async (id) => {
+    setRestoring(true);
+    try {
+      const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setDeletedOrderToast({ show: true, id: id, status: 'deleted' });
+        refreshOrders();
+      } else {
+        alert('Failed to delete order');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error deleting order');
+    }
+    setRestoring(false);
+  };
 
   // Customer options: either 'existing' or 'new'
   const [customerMode, setCustomerMode] = useState('new'); // 'new' or 'existing'
@@ -982,6 +1034,53 @@ export default function OrdersPage() {
           </div>
         </form>
       </dialog>
+      {/* Deleted Order Toast */}
+      {deletedOrderToast.show && (
+        <div style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
+          padding: '16px 24px',
+          borderRadius: 'var(--radius-md)',
+          boxShadow: 'var(--shadow-lg)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px',
+          zIndex: 9999,
+          animation: 'slideIn 0.3s ease-out'
+        }}>
+          <span style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+            {deletedOrderToast.status === 'deleted' ? 'Order deleted successfully.' : 'Order restored successfully.'}
+          </span>
+          {deletedOrderToast.status === 'deleted' ? (
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={() => handleUndoDelete(deletedOrderToast.id)}
+              disabled={restoring}
+            >
+              {restoring ? 'Restoring...' : 'Undo'}
+            </button>
+          ) : (
+            <button
+              className="btn btn-sm btn-danger"
+              onClick={() => handleRedoDelete(deletedOrderToast.id)}
+              disabled={restoring}
+            >
+              {restoring ? 'Deleting...' : 'Redo (Delete)'}
+            </button>
+          )}
+          <button
+            className="btn btn-ghost btn-sm"
+            onClick={() => setDeletedOrderToast({ show: false, id: null, status: '' })}
+            style={{ padding: '4px 8px' }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* Mobile responsiveness style overrides */}
       <style jsx global>{`
         @media (min-width: 1025px) {

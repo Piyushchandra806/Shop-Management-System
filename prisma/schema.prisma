@@ -68,6 +68,7 @@ model Order {
   qrCodeData          String?          // QR code base64 or status tracking link
   orderPhoto          String?          // Base64 data URL of the order photo captured via camera
   specialInstructions String?
+  isDeleted           Boolean          @default(false)
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
 

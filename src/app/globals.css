@@ -293,11 +293,11 @@ img    { max-width: 100%; display: block; }
 }
 
 .glass-modal {
-  background: var(--bg-card) !important;
-  backdrop-filter: blur(28px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  background: var(--bg-base) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
   border: 1px solid var(--border-color) !important;
-  box-shadow: var(--shadow-lg) !important;
+  box-shadow: var(--shadow-xl) !important;
   border-radius: var(--radius-lg) !important;
   color: var(--text-primary) !important;
 }
@@ -625,4 +625,15 @@ dialog::backdrop {
 @media print {
   body { background: white !important; color: #000 !important; }
   .no-print { display: none !important; }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

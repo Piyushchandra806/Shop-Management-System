@@ -225,25 +225,30 @@ export default function OrderDetailPage() {
     }
   };
 
+  const [isDeleting, setIsDeleting] = useState(false);
+
   // Delete order (Admin only)
   const handleDeleteOrder = async () => {
-    if (!confirm('Are you sure you want to permanently delete this order? This action cannot be undone.')) {
+    if (!confirm('Are you sure you want to permanently delete this order?')) {
       return;
     }
 
+    setIsDeleting(true);
     try {
       const res = await fetch(`/api/orders/${order.id}`, {
         method: 'DELETE'
       });
 
       if (res.ok) {
-        router.push('/orders');
+        router.push(`/orders?deletedOrder=${order.id}`);
       } else {
         alert('Failed to delete order');
+        setIsDeleting(false);
       }
     } catch (err) {
       console.error(err);
       alert('Error deleting order');
+      setIsDeleting(false);
     }
   };
 
@@ -268,8 +273,8 @@ export default function OrderDetailPage() {
         action={
           <div style={{ display: 'flex', gap: '12px' }}>
             {isAdmin && (
-              <button className="btn btn-danger btn-sm" onClick={handleDeleteOrder}>
-                🗑️ Delete Order
+              <button className="btn btn-danger btn-sm" onClick={handleDeleteOrder} disabled={isDeleting}>
+                {isDeleting ? '🗑️ Deleting...' : '🗑️ Delete Order'}
               </button>
             )}
             <button

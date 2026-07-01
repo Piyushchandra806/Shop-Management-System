@@ -123,9 +123,10 @@ export async function DELETE(req, { params }) {
     const { id } = await params;
     const orderId = id;
 
-    // SQLite cascade delete handled via schema definition onDelete: Cascade
-    await prisma.order.delete({
-      where: { id: orderId }
+    // Perform soft delete
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { isDeleted: true }
     });
 
     return NextResponse.json({ message: 'Order deleted successfully' });
