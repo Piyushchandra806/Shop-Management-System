@@ -293,7 +293,7 @@ img    { max-width: 100%; display: block; }
 }
 
 .glass-modal {
-  background: var(--bg-base) !important;
+  background: var(--bg-secondary) !important;
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
   border: 1px solid var(--border-color) !important;

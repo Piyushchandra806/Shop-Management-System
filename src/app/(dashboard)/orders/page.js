@@ -702,7 +702,7 @@ export default function OrdersPage() {
                     <input
                       type="text"
                       className="input"
-                      placeholder="e.g. Piyush Chandra"
+                      placeholder="enter name"
                       value={newCustomerName}
                       onChange={(e) => setNewCustomerName(e.target.value)}
                       required
@@ -713,7 +713,7 @@ export default function OrdersPage() {
                     <input
                       type="tel"
                       className="input"
-                      placeholder="e.g. 9876543210"
+                      placeholder="xxxxxxxxxx"
                       value={newCustomerPhone}
                       onChange={(e) => setNewCustomerPhone(e.target.value)}
                       required
@@ -724,7 +724,7 @@ export default function OrdersPage() {
                     <input
                       type="email"
                       className="input"
-                      placeholder="e.g. customer@gmail.com"
+                      placeholder="name@gmail.com"
                       value={newCustomerEmail}
                       onChange={(e) => setNewCustomerEmail(e.target.value)}
                     />

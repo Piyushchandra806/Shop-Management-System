@@ -71,7 +71,7 @@ export default function OrderPrintPage() {
         <div>
           <h1 style={{ margin: '0 0 5px 0', fontSize: '24px', fontWeight: '800' }}>🖨️ MAYANK COMPUTER</h1>
           <p style={{ margin: 0, fontSize: '14px', color: '#555' }}>Shop Order Slip & Job Card</p>
-          <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#555' }}><strong>GSTIN:</strong> 22AAAAA0000A1Z5</p>
+          <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#555' }}><strong>GSTIN:</strong> 22AZNPC9163C1ZL</p>
         </div>
         <div style={{ textAlign: 'right' }}>
           <h2 style={{ margin: '0 0 5px 0', fontSize: '18px', fontWeight: '700', color: '#1a365d' }}>{order.orderNumber}</h2>
