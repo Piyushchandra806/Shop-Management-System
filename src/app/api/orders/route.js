@@ -18,7 +18,7 @@ export async function GET(req) {
     const operatorId = searchParams.get('operatorId');
     const dashboardFilter = searchParams.get('dashboardFilter');
 
-    const where = { isDeleted: false };
+    const where = { NOT: { isDeleted: true } };
 
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);

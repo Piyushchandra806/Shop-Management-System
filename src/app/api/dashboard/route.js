@@ -25,7 +25,7 @@ export async function GET(req) {
         where: {
           assignedToId: session.user.id,
           createdAt: { gte: startOfToday },
-          isDeleted: false
+          NOT: { isDeleted: true }
         }
       });
 
@@ -34,7 +34,7 @@ export async function GET(req) {
         where: {
           assignedToId: session.user.id,
           status: { not: 'delivered' },
-          isDeleted: false
+          NOT: { isDeleted: true }
         }
       });
 
@@ -44,7 +44,7 @@ export async function GET(req) {
           assignedToId: session.user.id,
           status: { in: ['ready', 'delivered'] },
           updatedAt: { gte: startOfToday },
-          isDeleted: false
+          NOT: { isDeleted: true }
         }
       });
 
@@ -56,7 +56,7 @@ export async function GET(req) {
           where: {
             status,
             assignedToId: session.user.id,
-            isDeleted: false
+            NOT: { isDeleted: true }
           }
         });
       }
@@ -65,7 +65,7 @@ export async function GET(req) {
       const recentOrders = await prisma.order.findMany({
         where: {
           assignedToId: session.user.id,
-          isDeleted: false
+          NOT: { isDeleted: true }
         },
         take: 5,
         orderBy: {
@@ -100,7 +100,7 @@ export async function GET(req) {
         createdAt: {
           gte: startOfToday
         },
-        isDeleted: false
+        NOT: { isDeleted: true }
       }
     });
 
@@ -110,7 +110,7 @@ export async function GET(req) {
         status: {
           not: 'delivered'
         },
-        isDeleted: false
+        NOT: { isDeleted: true }
       }
     });
 
@@ -133,7 +133,7 @@ export async function GET(req) {
         dueAmount: {
           gt: 0
         },
-        isDeleted: false
+        NOT: { isDeleted: true }
       },
       _sum: {
         dueAmount: true
@@ -146,13 +146,13 @@ export async function GET(req) {
     const ordersByStatus = {};
     for (const status of statuses) {
       ordersByStatus[status] = await prisma.order.count({
-        where: { status, isDeleted: false }
+        where: { status, NOT: { isDeleted: true } }
       });
     }
 
     // 6. Admin: Recent orders (last 5)
     const recentOrders = await prisma.order.findMany({
-      where: { isDeleted: false },
+      where: { NOT: { isDeleted: true } },
       take: 5,
       orderBy: {
         createdAt: 'desc'
@@ -193,11 +193,11 @@ export async function GET(req) {
     const operatorActivity = [];
     for (const op of operatorsList) {
       const orderCount = await prisma.order.count({
-        where: { createdById: op.id, isDeleted: false }
+        where: { createdById: op.id, NOT: { isDeleted: true } }
       });
 
       const latestOrders = await prisma.order.findMany({
-        where: { createdById: op.id, isDeleted: false },
+        where: { createdById: op.id, NOT: { isDeleted: true } },
         take: 3,
         orderBy: { createdAt: 'desc' },
         select: {
