@@ -66,6 +66,7 @@ export default function LoginPage() {
       } else {
         localStorage.setItem('rememberedEmail', email.trim());
         localStorage.setItem('rememberedPassword', password);
+        sessionStorage.setItem('wasLoggedIn', 'true');
         router.push('/dashboard');
         router.refresh();
       }
@@ -188,7 +189,7 @@ export default function LoginPage() {
               type="text"
               id="email"
               name="email"
-              placeholder="admin@printpress.com"
+              placeholder="name@gmail.com"
               value={email}
               onChange={handleEmailChange}
               onBlur={handleEmailBlur}
@@ -220,20 +221,30 @@ export default function LoginPage() {
 
           {/* Password */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <label htmlFor="password" style={{
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              color: '#94A3B8',
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em'
-            }}>
-              Password
-            </label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label htmlFor="password" style={{
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: '#94A3B8',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em'
+              }}>
+                Password
+              </label>
+              <Link href="/forgot-password" style={{
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                color: '#10B981',
+                textDecoration: 'none'
+              }}>
+                Forgot Password?
+              </Link>
+            </div>
             <input
               type="password"
               id="password"
               name="password"
-              placeholder="••••••••"
+              placeholder="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

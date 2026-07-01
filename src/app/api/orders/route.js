@@ -180,15 +180,27 @@ export async function POST(req) {
       const dateString = today.toISOString().slice(0, 10).replace(/-/g, '');
       const prefix = `ORD-${dateString}`;
 
-      // Count orders for today to determine NNN
-      const countToday = await tx.order.count({
+      // Find the last created order for today to determine NNN
+      const lastOrderToday = await tx.order.findFirst({
         where: {
           orderNumber: {
             startsWith: prefix
           }
+        },
+        orderBy: {
+          orderNumber: 'desc'
         }
       });
-      const sequenceNum = String(countToday + 1).padStart(3, '0');
+
+      let nextSeq = 1;
+      if (lastOrderToday) {
+        const parts = lastOrderToday.orderNumber.split('-');
+        const lastSeq = parseInt(parts[parts.length - 1]);
+        if (!isNaN(lastSeq)) {
+          nextSeq = lastSeq + 1;
+        }
+      }
+      const sequenceNum = String(nextSeq).padStart(3, '0');
       const orderNumber = `${prefix}-${sequenceNum}`;
 
       // 4. Create Order

@@ -24,13 +24,13 @@ async function main() {
   }
 
   // 1. Create Users
-  const adminPasswordHash = await bcrypt.hash('admin123', 10);
+  const adminPasswordHash = await bcrypt.hash('password', 10);
   const operatorPasswordHash = await bcrypt.hash('operator123', 10);
 
   const admin = await prisma.user.create({
     data: {
       name: 'Admin Owner',
-      email: 'admin@printpress.com',
+      email: 'name@gmail.com',
       phone: '9876543210',
       passwordHash: adminPasswordHash,
       role: 'admin',

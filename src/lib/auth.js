@@ -7,8 +7,8 @@ export const authOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'email', placeholder: 'admin@printpress.com' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: 'Email', type: 'email', placeholder: 'name@gmail.com' },
+        password: { label: 'Password', type: 'password', placeholder: 'password' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {

@@ -17,6 +17,9 @@ model User {
   isActive     Boolean          @default(true)
   createdAt    DateTime         @default(now())
   
+  otpCode      String?
+  otpExpiresAt DateTime?
+
   // Relations
   createdOrders  Order[]          @relation("OrderCreatedBy")
   assignedOrders Order[]          @relation("OrderAssignedTo")

@@ -759,7 +759,7 @@ export default function OrderDetailPage() {
                     <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '2px' }}>
                       By {log.updatedBy.name} • {new Date(log.changedAt).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' })}
                     </div>
-                    {log.note && <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontStyle: 'italic' }}>"{log.note}"</p>}
+                    {log.note && <p style={{ margin: '4px 0 0 0', color: 'var(--text-secondary)', fontStyle: 'italic' }}>&quot;{log.note}&quot;</p>}
                   </div>
                 </div>
               ))}

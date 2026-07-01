@@ -9,9 +9,6 @@ export async function GET(req, { params }) {
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    if (session.user.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden: Admins only can access customer database' }, { status: 403 });
-    }
 
     const { id } = await params;
     const customerId = id;
@@ -47,9 +44,6 @@ export async function PUT(req, { params }) {
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    if (session.user.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden: Admins only can access customer database' }, { status: 403 });
-    }
 
     const { id } = await params;
     const customerId = id;
@@ -72,5 +66,45 @@ export async function PUT(req, { params }) {
   } catch (error) {
     console.error('PUT Customer Error:', error);
     return NextResponse.json({ error: 'Failed to update customer' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req, { params }) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Forbidden: Admins only can delete customer accounts' }, { status: 403 });
+    }
+
+    const { id } = await params;
+    const customerId = id;
+
+    // Delete customer and cascade delete their orders and orders items, payments, etc in transaction
+    await prisma.$transaction(async (tx) => {
+      const customerOrders = await tx.order.findMany({
+        where: { customerId }
+      });
+      const orderIds = customerOrders.map(o => o.id);
+
+      if (orderIds.length > 0) {
+        await tx.orderItem.deleteMany({ where: { orderId: { in: orderIds } } });
+        await tx.payment.deleteMany({ where: { orderId: { in: orderIds } } });
+        await tx.orderStatusLog.deleteMany({ where: { orderId: { in: orderIds } } });
+        await tx.orderNote.deleteMany({ where: { orderId: { in: orderIds } } });
+        await tx.order.deleteMany({ where: { customerId } });
+      }
+
+      await tx.customer.delete({
+        where: { id: customerId }
+      });
+    });
+
+    return NextResponse.json({ message: 'Customer and all associated orders deleted successfully' });
+  } catch (error) {
+    console.error('DELETE Customer Error:', error);
+    return NextResponse.json({ error: 'Failed to delete customer' }, { status: 500 });
   }
 }
