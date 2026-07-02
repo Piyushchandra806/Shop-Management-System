@@ -126,27 +126,32 @@ export default function CustomersPage() {
 
   const handleDeleteCustomer = async (e, customerId, customerName) => {
     e.stopPropagation();
+    alert(`Debug 1: clicked delete for ${customerName} (ID: ${customerId})`);
     if (!confirm(`⚠️ WARNING: Are you sure you want to permanently delete customer "${customerName}"?\n\nThis will ALSO permanently delete all orders, invoices, status logs, and payments associated with this customer. This action CANNOT be undone.`)) {
+      alert("Debug 2: confirm dialog cancelled");
       return;
     }
 
+    alert("Debug 3: confirm dialog accepted, calling fetch DELETE...");
     try {
       const res = await fetch(`/api/customers/${customerId}`, {
         method: 'DELETE'
       });
+      alert(`Debug 4: fetch completed with status ${res.status}`);
 
       if (res.ok) {
+        alert("Debug 5: delete response was OK, reloading customers list...");
         if (expandedCustomerId === customerId) {
           setExpandedCustomerId(null);
         }
         fetchCustomers();
       } else {
         const errData = await res.json();
-        alert(errData.error || 'Failed to delete customer');
+        alert(`Debug 6: delete failed with error: ${errData.error || 'Unknown error'}`);
       }
     } catch (err) {
       console.error(err);
-      alert('Error deleting customer');
+      alert(`Debug Catch: deletion failed with exception: ${err.message || err}`);
     }
   };
 

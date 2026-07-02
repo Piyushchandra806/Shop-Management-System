@@ -14,10 +14,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const rememberedEmail = localStorage.getItem('rememberedEmail');
-    const rememberedPassword = localStorage.getItem('rememberedPassword');
-    if (rememberedEmail) setEmail(rememberedEmail);
-    if (rememberedPassword) setPassword(rememberedPassword);
+    localStorage.removeItem('rememberedEmail');
+    localStorage.removeItem('rememberedPassword');
   }, []);
 
   const validateEmail = (emailValue) => {
@@ -64,8 +62,6 @@ export default function LoginPage() {
       if (result.error) {
         setError(result.error);
       } else {
-        localStorage.setItem('rememberedEmail', email.trim());
-        localStorage.setItem('rememberedPassword', password);
         sessionStorage.setItem('wasLoggedIn', 'true');
         router.push('/dashboard');
         router.refresh();

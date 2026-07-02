@@ -31,6 +31,8 @@ export default function OrderDetailPage() {
   const [statusUpdateNote, setStatusUpdateNote] = useState('');
   const [updatingStatus, setUpdatingStatus] = useState(false);
 
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const paymentModalRef = useRef(null);
 
   const fetchOrderDetail = async () => {
@@ -224,8 +226,6 @@ export default function OrderDetailPage() {
       setSubmittingNote(false);
     }
   };
-
-  const [isDeleting, setIsDeleting] = useState(false);
 
   // Delete order (Admin only)
   const handleDeleteOrder = async () => {
