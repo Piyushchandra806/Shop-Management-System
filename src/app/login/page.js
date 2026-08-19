@@ -59,7 +59,7 @@ export default function LoginPage() {
         password,
       });
 
-      if (result.error) {
+      if (result?.error) {
         setError(result.error);
       } else {
         sessionStorage.setItem('wasLoggedIn', 'true');
