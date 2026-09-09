@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -35,6 +35,9 @@ export default function LoginPage() {
     if (email.trim()) setEmailError(validateEmail(email));
   };
 
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -63,8 +66,9 @@ export default function LoginPage() {
         setError(result.error);
       } else {
         sessionStorage.setItem('wasLoggedIn', 'true');
-        router.push('/dashboard');
-        router.refresh();
+        // Use window.location to force a hard navigation, ensuring the new session cookie 
+        // is sent to the middleware properly, preventing redirect loops.
+        window.location.href = result?.url || callbackUrl;
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');
