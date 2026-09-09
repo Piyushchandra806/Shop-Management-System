@@ -66,9 +66,10 @@ export default function LoginPage() {
         setError(result.error);
       } else {
         sessionStorage.setItem('wasLoggedIn', 'true');
-        // Use window.location to force a hard navigation, ensuring the new session cookie 
-        // is sent to the middleware properly, preventing redirect loops.
-        window.location.href = result?.url || callbackUrl;
+        // Use window.location to force a hard navigation.
+        // We explicitly use our resolved callbackUrl instead of result?.url
+        // because NextAuth defaults result.url back to the current page (/login) if empty.
+        window.location.href = callbackUrl;
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');
