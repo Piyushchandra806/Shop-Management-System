@@ -65,7 +65,6 @@ export default function LoginPage() {
       if (result?.error) {
         setError(result.error);
       } else {
-        sessionStorage.setItem('wasLoggedIn', 'true');
         // Use window.location to force a hard navigation.
         // We explicitly use our resolved callbackUrl instead of result?.url
         // because NextAuth defaults result.url back to the current page (/login) if empty.
@@ -85,39 +84,32 @@ export default function LoginPage() {
       alignItems: 'center',
       justifyContent: 'center',
       minHeight: '100vh',
-      /* Slate 900 base */
-      background: 'linear-gradient(160deg, #0F172A 0%, #1E293B 50%, #0F172A 100%)',
+      background: 'var(--bg-primary)',
       padding: '20px',
       position: 'relative',
       overflow: 'hidden'
     }}>
 
-      {/* Decorative Emerald blob */}
+      {/* Decorative Primary blob */}
       <div style={{
         position: 'absolute', top: '-140px', right: '-80px',
         width: '420px', height: '420px',
-        background: 'radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, var(--accent-primary-glow) 0%, transparent 70%)',
         borderRadius: '50%', pointerEvents: 'none'
       }} />
-      {/* Decorative Slate blob */}
+      {/* Decorative Secondary blob */}
       <div style={{
         position: 'absolute', bottom: '-120px', left: '-100px',
         width: '380px', height: '380px',
-        background: 'radial-gradient(circle, rgba(100,116,139,0.12) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)',
         borderRadius: '50%', pointerEvents: 'none'
       }} />
 
-      {/* Login Card — Slate 800 glass */}
-      <div className="animate-scale-in" style={{
+      {/* Login Card */}
+      <div className="animate-scale-in glass-card" style={{
         width: '100%',
         maxWidth: '440px',
         padding: '48px 40px',
-        background: 'rgba(30, 41, 59, 0.70)',
-        backdropFilter: 'blur(28px) saturate(160%)',
-        WebkitBackdropFilter: 'blur(28px) saturate(160%)',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.40), inset 0 0 0 1px rgba(148,163,184,0.08)',
-        border: '1px solid rgba(148, 163, 184, 0.12)',
-        borderRadius: '20px',
         position: 'relative',
         zIndex: 1
       }}>
@@ -126,23 +118,23 @@ export default function LoginPage() {
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <div style={{
             width: '60px', height: '60px',
-            background: 'linear-gradient(135deg, #10B981, #059669)',
+            background: 'var(--gradient-primary)',
             borderRadius: '16px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '1.6rem',
             margin: '0 auto 16px auto',
-            boxShadow: '0 8px 24px rgba(16,185,129,0.35)'
+            boxShadow: 'var(--shadow-glow-primary)'
           }}>
             🖨️
           </div>
           <h1 style={{
             fontSize: '1.75rem',
             fontWeight: 800,
-            color: '#F8FAFC',
+            color: 'var(--text-primary)',
             letterSpacing: '-0.02em',
             margin: '0 0 6px 0'
           }}>
-            MayankComputer
+            PrintPress
           </h1>
           <p style={{
             color: '#64748B',
@@ -200,17 +192,17 @@ export default function LoginPage() {
               style={{
                 width: '100%',
                 padding: '12px 16px',
-                background: 'rgba(15, 23, 42, 0.60)',
+                background: 'var(--bg-tertiary)',
                 border: emailError
-                  ? '1px solid rgba(239,68,68,0.55)'
-                  : '1px solid rgba(148,163,184,0.18)',
+                  ? '1px solid var(--accent-danger)'
+                  : '1px solid var(--border-color)',
                 borderRadius: '10px',
-                color: '#F8FAFC',
+                color: 'var(--text-primary)',
                 fontSize: '0.95rem',
                 outline: 'none',
                 transition: 'all 0.2s ease',
                 fontFamily: 'Inter, -apple-system, sans-serif',
-                boxShadow: emailError ? '0 0 0 3px rgba(239,68,68,0.14)' : 'none'
+                boxShadow: emailError ? '0 0 0 3px var(--accent-danger-glow)' : 'none'
               }}
             />
             {emailError && (
@@ -254,10 +246,10 @@ export default function LoginPage() {
               style={{
                 width: '100%',
                 padding: '12px 16px',
-                background: 'rgba(15, 23, 42, 0.60)',
-                border: '1px solid rgba(148,163,184,0.18)',
+                background: 'var(--bg-tertiary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '10px',
-                color: '#F8FAFC',
+                color: 'var(--text-primary)',
                 fontSize: '0.95rem',
                 outline: 'none',
                 transition: 'all 0.2s ease',
@@ -275,8 +267,8 @@ export default function LoginPage() {
               padding: '14px',
               marginTop: '8px',
               background: loading
-                ? 'rgba(16,185,129,0.40)'
-                : 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                ? 'rgba(220,163,232,0.40)'
+                : 'var(--gradient-primary)',
               color: '#FFFFFF',
               fontSize: '1rem',
               fontWeight: 700,
@@ -285,7 +277,7 @@ export default function LoginPage() {
               cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'all 0.2s ease',
               fontFamily: 'Inter, -apple-system, sans-serif',
-              boxShadow: loading ? 'none' : '0 6px 20px rgba(16,185,129,0.35)',
+              boxShadow: loading ? 'none' : 'var(--shadow-glow-primary)',
               letterSpacing: '0.01em'
             }}
           >
@@ -293,21 +285,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Footer */}
-        <div style={{ marginTop: '28px', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.85rem', color: '#64748B', margin: 0 }}>
-            Don&apos;t have an administrator account?{' '}
-            <Link href="/register" style={{
-              color: '#10B981',
-              fontWeight: 700,
-              textDecoration: 'none',
-              borderBottom: '1px solid rgba(16,185,129,0.35)',
-              paddingBottom: '1px'
-            }}>
-              Register here
-            </Link>
-          </p>
-        </div>
+        {/* Footer Removed */}
       </div>
     </div>
   );

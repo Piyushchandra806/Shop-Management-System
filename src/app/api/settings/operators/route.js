@@ -7,19 +7,17 @@ import bcrypt from 'bcryptjs';
 export async function GET(req) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Admin only access' }, { status: 403 });
     }
 
     const operators = await prisma.user.findMany({
-      where: {
-        role: 'operator'
-      },
       select: {
         id: true,
         name: true,
         email: true,
         phone: true,
+        role: true,
         isActive: true,
         createdAt: true
       },
@@ -43,11 +41,14 @@ export async function POST(req) {
     }
 
     const body = await req.json();
-    const { name, email, phone, password } = body;
+    const { name, email, phone, password, role } = body;
 
     if (!name || !email || !phone || !password) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
+
+    // Default to 'operator' if role is not explicitly 'admin'
+    const newRole = role === 'admin' ? 'admin' : 'operator';
 
     // Check email uniqueness
     const existing = await prisma.user.findUnique({
@@ -65,7 +66,7 @@ export async function POST(req) {
         email,
         phone,
         passwordHash,
-        role: 'operator',
+        role: newRole,
         isActive: true
       },
       select: {
@@ -73,6 +74,7 @@ export async function POST(req) {
         name: true,
         email: true,
         phone: true,
+        role: true,
         isActive: true,
         createdAt: true
       }

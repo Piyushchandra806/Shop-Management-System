@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import PageHeader from '@/components/PageHeader';
 import StatusBadge from '@/components/StatusBadge';
 import Link from 'next/link';
@@ -9,6 +10,13 @@ import Link from 'next/link';
 export default function CustomersPage() {
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === 'admin';
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session && !isAdmin) {
+      router.push('/dashboard');
+    }
+  }, [session, isAdmin, router]);
 
   const [customers, setCustomers] = useState([]);
   const [search, setSearch] = useState('');

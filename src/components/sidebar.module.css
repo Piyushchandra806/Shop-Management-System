@@ -4,84 +4,82 @@
 
 .sidebar {
   width: var(--sidebar-width);
-  height: 100vh;
+  height: calc(100vh - 32px);
+  margin: 16px;
   position: fixed;
   top: 0;
   left: 0;
-  /* Slate 900 → deeper */
-  background: linear-gradient(180deg, #0F172A 0%, #0c1222 100%);
-  border-right: 1px solid rgba(148, 163, 184, 0.10);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
   display: flex;
   flex-direction: column;
   z-index: 100;
   transition: var(--transition-slow);
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.30);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
 }
 
 /* ---- Brand ---- */
 .brand {
-  padding: 22px 20px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+  padding: 32px 24px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.02);
+  gap: 12px;
 }
 
 .logo {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
 }
 
 .brandText {
-  font-weight: 800;
-  font-size: 1.1rem;
-  color: #F8FAFC;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
 /* ---- Nav ---- */
 .nav {
   flex: 1;
-  padding: 14px 10px;
+  padding: 0 16px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   overflow-y: auto;
 }
 
 .navLink {
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 11px 14px;
-  border-radius: var(--radius-sm);
-  /* Slate 400 — clearly readable on Slate 900 */
-  color: #94A3B8;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   transition: var(--transition);
   text-decoration: none;
   border: 1px solid transparent;
 }
 
 .navLink:hover {
-  color: #F8FAFC;
-  background: rgba(148, 163, 184, 0.08);
-  border-color: rgba(148, 163, 184, 0.06);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-/* Active link — Emerald tinted pill */
+/* Active link — Gradient pill */
 .activeLink {
-  color: #F8FAFC;
-  background: rgba(16, 185, 129, 0.18);
+  color: var(--text-primary);
+  background: var(--gradient-soft);
   font-weight: 600;
-  border-color: rgba(16, 185, 129, 0.35);
-  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.20);
+  border-color: var(--border-color-focus);
+  box-shadow: 0 4px 12px var(--accent-primary-glow);
 }
 
 .activeLink:hover {
-  color: #F8FAFC;
-  background: rgba(16, 185, 129, 0.25);
+  color: var(--text-primary);
+  background: rgba(220, 163, 232, 0.2);
 }
 
 /* ---- Dark / Light Toggle ---- */

@@ -1,53 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Sidebar from '@/components/Sidebar';
 
 export default function DashboardLayout({ children }) {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (status === 'authenticated' && session) {
-      // 1. Tab Closed/Returned Detection (Requirement 4)
-      const wasLoggedIn = sessionStorage.getItem('wasLoggedIn');
-      if (!wasLoggedIn) {
-        // Closed tab and returned -> Force Logout
-        signOut({ redirect: true, callbackUrl: '/login' });
-        return;
-      }
-
-      // 2. 1-Minute Inactivity Auto-Logout (Requirement 4)
-      let inactivityTimeout;
-
-      const resetInactivityTimer = () => {
-        if (inactivityTimeout) clearTimeout(inactivityTimeout);
-        inactivityTimeout = setTimeout(() => {
-          console.log('[Inactivity Auto-Logout] User has been inactive for 1 minute.');
-          // Remove flag and logout
-          sessionStorage.removeItem('wasLoggedIn');
-          signOut({ redirect: true, callbackUrl: '/login' });
-        }, 60000); // 1 minute = 60000 ms
-      };
-
-      // Events indicating activity
-      const activityEvents = ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'];
-      
-      activityEvents.forEach(eventName => {
-        window.addEventListener(eventName, resetInactivityTimer);
-      });
-
-      // Start initial timer
-      resetInactivityTimer();
-
-      // Clean up event listeners and timer on unmount
-      return () => {
-        if (inactivityTimeout) clearTimeout(inactivityTimeout);
-        activityEvents.forEach(eventName => {
-          window.removeEventListener(eventName, resetInactivityTimer);
-        });
-      };
-    }
+    // Rely exclusively on NextAuth for session management.
+    // Removed the custom 1-minute auto-logout and sessionStorage 'wasLoggedIn' checks.
   }, [session, status]);
 
   return (

@@ -10,8 +10,7 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     const stored = localStorage.getItem('printpress-theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initial = stored || (prefersDark ? 'dark' : 'light');
+    const initial = stored || 'dark'; // Force dark mode by default for new UI
     setTheme(initial);
     setMounted(true);
   }, []);

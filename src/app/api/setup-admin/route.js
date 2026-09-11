@@ -5,7 +5,28 @@ import prisma from '@/lib/prisma';
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { name, email, phone, password } = body;
+    const { name, email, phone, password, setupSecret } = body;
+
+    // Check if any admin already exists
+    const adminCount = await prisma.user.count({
+      where: { role: 'admin' },
+    });
+
+    if (adminCount > 0) {
+      return NextResponse.json(
+        { error: 'Administrator account already exists. Initial setup is disabled.' },
+        { status: 403 }
+      );
+    }
+
+    // Verify setup secret
+    const serverSecret = process.env.ADMIN_SETUP_SECRET;
+    if (!serverSecret || setupSecret !== serverSecret) {
+      return NextResponse.json(
+        { error: 'Invalid or missing setup secret.' },
+        { status: 403 }
+      );
+    }
 
     // Validate required fields
     if (!name || !email || !phone || !password) {
@@ -28,18 +49,6 @@ export async function POST(req) {
     if (password.length < 6) {
       return NextResponse.json(
         { error: 'Password must be at least 6 characters long.' },
-        { status: 400 }
-      );
-    }
-
-    // Check the admin registration limit (max 4)
-    const adminCount = await prisma.user.count({
-      where: { role: 'admin' },
-    });
-
-    if (adminCount >= 4) {
-      return NextResponse.json(
-        { error: 'Registration limit reached. A maximum of 4 administrators are allowed.' },
         { status: 400 }
       );
     }
@@ -76,7 +85,7 @@ export async function POST(req) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('POST Register Error:', error);
+    console.error('POST Setup Admin Error:', error);
     return NextResponse.json(
       { error: 'An unexpected error occurred. Please try again.' },
       { status: 500 }

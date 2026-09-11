@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import PageHeader from '@/components/PageHeader';
 
 export default function SettingsPage() {
@@ -8,6 +10,15 @@ export default function SettingsPage() {
   const [products, setProducts] = useState([]);
   const [operators, setOperators] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session && session.user.role !== 'admin') {
+      router.push('/dashboard');
+    }
+  }, [session, router]);
 
   // New product states
   const [prodName, setProdName] = useState('');
@@ -21,6 +32,7 @@ export default function SettingsPage() {
   const [opEmail, setOpEmail] = useState('');
   const [opPhone, setOpPhone] = useState('');
   const [opPassword, setOpPassword] = useState('');
+  const [opRole, setOpRole] = useState('operator');
   const [addingOperator, setAddingOperator] = useState(false);
 
   const fetchSettingsData = async () => {
@@ -105,7 +117,8 @@ export default function SettingsPage() {
           name: opName,
           email: opEmail,
           phone: opPhone,
-          password: opPassword
+          password: opPassword,
+          role: opRole
         })
       });
 
@@ -114,6 +127,7 @@ export default function SettingsPage() {
         setOpEmail('');
         setOpPhone('');
         setOpPassword('');
+        setOpRole('operator');
         fetchSettingsData();
       } else {
         const errJson = await res.json();
@@ -146,7 +160,7 @@ export default function SettingsPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <PageHeader
         title="Settings & Catalog"
-        subtitle="Manage product price indexes and create operator staff logins"
+        subtitle="Manage product price indexes and user accounts"
       />
 
       {/* Tabs Selector */}
@@ -163,7 +177,7 @@ export default function SettingsPage() {
           onClick={() => setActiveTab('operators')}
           style={{ border: 'none', borderRadius: 'var(--radius-sm) var(--radius-sm) 0 0', padding: '10px 24px' }}
         >
-          🔧 Operators Setup
+          🔧 User Management
         </button>
       </div>
 
@@ -283,12 +297,12 @@ export default function SettingsPage() {
           {/* TAB 2: OPERATORS SETUP */}
           {activeTab === 'operators' && (
             <>
-              {/* Add Operator Form */}
+              {/* Add User Form */}
               <div className="glass-card" style={{ padding: '24px', alignSelf: 'start' }}>
-                <h3 style={{ fontSize: '1.1rem', marginBottom: '20px' }}>Create Staff Login</h3>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: '20px' }}>Create User</h3>
                 <form onSubmit={handleCreateOperator} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div className="form-group">
-                    <label className="form-label">Operator Name *</label>
+                    <label className="form-label">Full Name *</label>
                     <input
                       type="text"
                       className="input"
@@ -301,7 +315,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Staff Email *</label>
+                    <label className="form-label">Email Address *</label>
                     <input
                       type="email"
                       className="input"
@@ -314,7 +328,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Staff Phone *</label>
+                    <label className="form-label">Phone Number *</label>
                     <input
                       type="tel"
                       className="input"
@@ -339,19 +353,32 @@ export default function SettingsPage() {
                     />
                   </div>
 
+                  <div className="form-group">
+                    <label className="form-label">Role *</label>
+                    <select
+                      className="select"
+                      value={opRole}
+                      onChange={(e) => setOpRole(e.target.value)}
+                      disabled={addingOperator}
+                    >
+                      <option value="operator">EMPLOYEE</option>
+                      <option value="admin">ADMIN</option>
+                    </select>
+                  </div>
+
                   <button type="submit" className="btn btn-primary" style={{ marginTop: '8px' }} disabled={addingOperator}>
-                    {addingOperator ? 'Creating...' : 'Create Account'}
+                    {addingOperator ? 'Creating...' : 'Create User'}
                   </button>
                 </form>
               </div>
 
-              {/* Operators list */}
+              {/* Users list */}
               <div className="glass-card" style={{ padding: '24px', overflowX: 'auto' }}>
-                <h3 style={{ fontSize: '1.1rem', marginBottom: '16px' }}>Staff Accounts</h3>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: '16px' }}>Registered Users</h3>
                 <table className="table">
                   <thead>
                     <tr>
-                      <th>Staff Name</th>
+                      <th>Name / Role</th>
                       <th>Email/Phone</th>
                       <th>Status</th>
                       <th className="text-right">Actions</th>
@@ -381,7 +408,7 @@ export default function SettingsPage() {
                             letterSpacing: '0.05em',
                             textTransform: 'uppercase'
                           }}>
-                            OPERATOR
+                            {op.role === 'admin' ? 'ADMIN' : 'EMPLOYEE'}
                           </span>
                         </td>
 

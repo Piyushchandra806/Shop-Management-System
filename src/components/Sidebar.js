@@ -5,6 +5,17 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { useTheme } from './ThemeProvider';
+import { 
+  LayoutDashboard, 
+  Briefcase, 
+  Users, 
+  Wallet, 
+  Settings, 
+  Box, 
+  LogOut,
+  Moon,
+  Sun
+} from 'lucide-react';
 import styles from './sidebar.module.css';
 
 export default function Sidebar() {
@@ -23,17 +34,17 @@ export default function Sidebar() {
   const isDark = theme === 'dark';
 
   const menuItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: '📊' },
-    { name: 'Orders',    path: '/orders',    icon: '📋' },
+    { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
+    { name: 'Portfolio',    path: '/orders',    icon: <Briefcase size={20} /> },
   ];
 
   if (isAdmin) {
-    menuItems.push({ name: 'Customers', path: '/customers', icon: '👥' });
-    menuItems.push({ name: 'Dues',      path: '/dues',      icon: '💸' });
-    menuItems.push({ name: 'Settings',  path: '/settings',  icon: '⚙️' });
+    menuItems.push({ name: 'Community', path: '/customers', icon: <Users size={20} /> });
+    menuItems.push({ name: 'Wallet',      path: '/dues',      icon: <Wallet size={20} /> });
+    menuItems.push({ name: 'Settings',  path: '/settings',  icon: <Settings size={20} /> });
   }
 
-  menuItems.push({ name: 'Inventory', path: '/inventory', icon: '📦' });
+  menuItems.push({ name: 'Inventory', path: '/inventory', icon: <Box size={20} /> });
 
   return (
     <>
@@ -45,8 +56,10 @@ export default function Sidebar() {
 
         {/* Brand */}
         <div className={styles.brand}>
-          <span className={styles.logo}>🖨️</span>
-          <span className={styles.brandText}>MayankComputer</span>
+          <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ color: '#fff', fontWeight: 'bold' }}>P</span>
+          </div>
+          <span className={styles.brandText}>PrintPress</span>
         </div>
 
         {/* Navigation */}
@@ -73,7 +86,7 @@ export default function Sidebar() {
           onClick={toggleTheme}
           aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
-          <span className={styles.themeIcon}>{isDark ? '🌙' : '☀️'}</span>
+          <span className={styles.themeIcon}>{isDark ? <Moon size={16} /> : <Sun size={16} />}</span>
           <span className={styles.themeToggleLabel}>
             {isDark ? 'Dark Mode' : 'Light Mode'}
           </span>
@@ -97,7 +110,7 @@ export default function Sidebar() {
             onClick={() => signOut({ callbackUrl: '/login' })}
             className={styles.logoutBtn}
           >
-            🚪 Log Out
+            <LogOut size={16} /> Log Out
           </button>
         </div>
 
