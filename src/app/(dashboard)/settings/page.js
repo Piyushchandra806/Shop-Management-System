@@ -292,8 +292,9 @@ export default function SettingsPage() {
                   </tbody>
                 </table>
               </div>
-            </>
-          )}
+            </div>
+          </>
+        )}
 
           {/* TAB 2: OPERATORS SETUP */}
           {activeTab === 'operators' && (
@@ -501,8 +502,9 @@ export default function SettingsPage() {
                   </tbody>
                 </table>
               </div>
-            </>
-          )}
+            </div>
+          </>
+        )}
 
         </div>
       )}
