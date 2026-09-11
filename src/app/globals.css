@@ -638,3 +638,125 @@ dialog::backdrop {
     opacity: 1;
   }
 }
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+
+.auth-card {
+  padding: 48px 40px;
+}
+
+.responsive-flex {
+  display: flex;
+  gap: 16px;
+}
+
+.responsive-flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.responsive-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.responsive-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.responsive-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.table-container table {
+  min-width: 600px; /* Ensures tables don't squish too much on mobile */
+}
+
+.order-item-row {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr 0.6fr 0.8fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+  background: rgba(15, 23, 42, 0.2);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 1024px) {
+  .responsive-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .responsive-grid-3 { grid-template-columns: repeat(2, 1fr); }
+  
+  /* On tablets, modal can be a bit wider */
+  .glass-modal {
+    width: 95% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .responsive-flex {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+  
+  .responsive-grid-4,
+  .responsive-grid-3, 
+  .responsive-grid-2 { 
+    grid-template-columns: 1fr; 
+  }
+  
+  .responsive-stack { 
+    flex-direction: column !important; 
+    align-items: stretch !important; 
+  }
+  
+  .mobile-w-full { 
+    width: 100% !important; 
+    max-width: 100% !important; 
+  }
+  
+  .mobile-hide { 
+    display: none !important; 
+  }
+
+  .mobile-gap-sm {
+    gap: 8px !important;
+  }
+
+  /* Form inner stacking */
+  .order-item-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  /* Modals padding adjustments */
+  .glass-modal > div, .auth-card {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  
+  /* Layout adjustments */
+  body {
+    font-size: 14px;
+  }
+  
+  .glass-card {
+    padding: 20px !important; /* Smaller padding on mobile cards */
+  }
+}

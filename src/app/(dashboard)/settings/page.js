@@ -164,7 +164,7 @@ export default function SettingsPage() {
       />
 
       {/* Tabs Selector */}
-      <div style={{ display: 'flex', gap: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '1px' }}>
+      <div style={{ display: 'flex', gap: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '1px', overflowX: 'auto', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch' }}>
         <button
           className={`btn ${activeTab === 'products' ? 'btn-primary' : 'btn-ghost'}`}
           onClick={() => setActiveTab('products')}
@@ -225,7 +225,7 @@ export default function SettingsPage() {
                     </select>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                  <div className="responsive-grid-2">
                     <div className="form-group">
                       <label className="form-label">Base Price (₹) *</label>
                       <input
@@ -260,9 +260,10 @@ export default function SettingsPage() {
               </div>
 
               {/* Products List */}
-              <div className="glass-card" style={{ padding: '24px', overflowX: 'auto' }}>
+              <div className="glass-card" style={{ padding: '24px' }}>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '16px' }}>Catalog Directory</h3>
-                <table className="table">
+                <div className="table-container">
+                  <table className="table">
                   <thead>
                     <tr>
                       <th>Service Name</th>
@@ -373,9 +374,10 @@ export default function SettingsPage() {
               </div>
 
               {/* Users list */}
-              <div className="glass-card" style={{ padding: '24px', overflowX: 'auto' }}>
+              <div className="glass-card" style={{ padding: '24px' }}>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '16px' }}>Registered Users</h3>
-                <table className="table">
+                <div className="table-container">
+                  <table className="table">
                   <thead>
                     <tr>
                       <th>Name / Role</th>

@@ -96,10 +96,9 @@ export default function SetupAdminPage() {
         borderRadius: '50%', pointerEvents: 'none'
       }} />
 
-      <div className="glass-card animate-scale-in" style={{
+      <div className="glass-card animate-scale-in auth-card" style={{
         width: '100%',
         maxWidth: '460px',
-        padding: '44px 36px',
         position: 'relative',
         zIndex: 1
       }}>
@@ -237,7 +236,7 @@ export default function SetupAdminPage() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+          <div className="responsive-grid-2" style={{ gap: '14px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <label className="form-label" style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Password *</label>
               <input

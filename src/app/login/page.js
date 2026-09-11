@@ -106,10 +106,9 @@ export default function LoginPage() {
       }} />
 
       {/* Login Card */}
-      <div className="animate-scale-in glass-card" style={{
+      <div className="animate-scale-in glass-card auth-card" style={{
         width: '100%',
         maxWidth: '440px',
-        padding: '48px 40px',
         position: 'relative',
         zIndex: 1
       }}>

@@ -158,7 +158,7 @@ export default function DashboardPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', paddingBottom: '40px' }}>
       
       {/* Top Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="responsive-flex" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: '1.8rem', fontWeight: 600, margin: 0 }}>
             <span style={{ color: 'var(--text-secondary)' }}>Welcome, </span>
@@ -203,7 +203,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Action Bar (Pills + Search) */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="responsive-flex-wrap" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', gap: '4px', background: 'var(--bg-tertiary)', padding: '6px', borderRadius: '40px' }}>
           {[
             { label: 'Overview', path: '/dashboard' }, 
@@ -243,7 +243,9 @@ export default function DashboardPage() {
               padding: '12px 20px 12px 42px',
               borderRadius: '40px',
               color: 'var(--text-primary)',
-              width: '320px',
+              width: '100%',
+              minWidth: '280px',
+              maxWidth: '320px',
               fontSize: '0.85rem',
               outline: 'none'
             }}
@@ -252,11 +254,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Main Grid Top Row */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'minmax(300px, 1.2fr) minmax(300px, 1.5fr) minmax(300px, 1fr)',
-        gap: '24px'
-      }} className="animate-slide-up">
+      <div className="responsive-grid-3 animate-slide-up">
         
         {/* Left Col: Total Revenue & Promo */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -355,7 +353,7 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div className="responsive-grid-2">
             {recentOrders.slice(0, 4).map(order => {
               const isPaid = order.dueAmount === 0;
               return (
@@ -395,12 +393,12 @@ export default function DashboardPage() {
             <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>Revenue trend over the current year</p>
           </div>
           
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <div className="responsive-flex-wrap" style={{ alignItems: 'center' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', background: 'var(--bg-tertiary)', padding: '8px 16px', borderRadius: '12px' }}>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Current Month</span>
               <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>₹{stats.monthlyRevenue || 140000}</span>
             </div>
-            <div style={{ display: 'flex', gap: '8px', background: 'var(--bg-tertiary)', padding: '4px', borderRadius: '20px' }}>
+            <div className="responsive-flex-wrap" style={{ background: 'var(--bg-tertiary)', padding: '4px', borderRadius: '20px' }}>
               {['1D', '1W', '1M', '6M', '1Y'].map(t => (
                 <button 
                   key={t} 

@@ -37,8 +37,10 @@ export default function DashboardLayout({ children }) {
         @media (max-width: 768px) {
           .main-content-layout {
             margin-left: 0 !important;
-            padding: 20px !important;
-            padding-top: 72px !important; /* Spacing for floating hamburger menu */
+            padding: 16px !important;
+            padding-top: 64px !important; /* Spacing for floating hamburger menu */
+            overflow-x: hidden;
+            width: 100%;
           }
         }
       `}</style>

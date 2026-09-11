@@ -111,10 +111,10 @@ export default function DuesPage() {
 
       {/* Controls — Search + Filter */}
       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
-        <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px', flex: '1 1 300px', maxWidth: '500px' }}>
+        <form onSubmit={handleSearchSubmit} className="responsive-flex-wrap" style={{ flex: '1 1 300px', maxWidth: '500px' }}>
           <input
             type="text"
-            className="input"
+            className="input mobile-w-full"
             placeholder="Search by customer name or phone..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -162,6 +162,7 @@ export default function DuesPage() {
               }}>
                 {/* Summary Row */}
                 <div
+                  className="dues-summary-row"
                   onClick={() => setExpandedId(isExpanded ? null : c.id)}
                   style={{
                     padding: '16px 24px',
@@ -258,69 +259,71 @@ export default function DuesPage() {
                       </div>
                     )}
 
-                    <table className="table" style={{ marginTop: '8px' }}>
-                      <thead>
-                        <tr>
-                          <th>Order #</th>
-                          <th>Items</th>
-                          <th>Date</th>
-                          <th>Status</th>
-                          <th className="text-right">Total</th>
-                          <th className="text-right">Paid</th>
-                          <th className="text-right" style={{ color: '#EF4444' }}>Due</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {entry.dueOrders.map((order) => (
-                          <tr key={order.id}>
-                            <td>
-                              <Link href={`/orders/${order.id}`} style={{ fontWeight: 700, color: 'var(--accent-primary)' }}>
-                                {order.orderNumber}
-                              </Link>
-                            </td>
-                            <td>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-                                {order.items.map((item, i) => (
-                                  <span key={i} style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-                                    {item.quantity}× {item.description}
-                                  </span>
-                                ))}
-                              </div>
-                            </td>
-                            <td style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
-                              {new Date(order.createdAt).toLocaleDateString('en-IN')}
-                            </td>
-                            <td>
-                              <StatusBadge status={order.status} />
-                            </td>
-                            <td className="text-right" style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                              ₹{order.totalAmount.toLocaleString('en-IN')}
-                            </td>
-                            <td className="text-right" style={{ fontWeight: 600, color: 'var(--accent-primary)' }}>
-                              ₹{order.paidAmount.toLocaleString('en-IN')}
-                            </td>
-                            <td className="text-right" style={{
-                              fontWeight: 800,
-                              color: order.paidAmount === 0 ? '#EF4444' : '#F59E0B'
-                            }}>
-                              ₹{order.dueAmount.toLocaleString('en-IN')}
-                              {order.paidAmount === 0 && (
-                                <span style={{
-                                  display: 'block',
-                                  fontSize: '0.62rem',
-                                  fontWeight: 700,
-                                  color: '#EF4444',
-                                  textTransform: 'uppercase',
-                                  letterSpacing: '0.04em'
-                                }}>
-                                  NO PAYMENT
-                                </span>
-                              )}
-                            </td>
+                    <div className="table-container">
+                      <table className="table" style={{ marginTop: '8px' }}>
+                        <thead>
+                          <tr>
+                            <th>Order #</th>
+                            <th>Items</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th className="text-right">Total</th>
+                            <th className="text-right">Paid</th>
+                            <th className="text-right" style={{ color: '#EF4444' }}>Due</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {entry.dueOrders.map((order) => (
+                            <tr key={order.id}>
+                              <td>
+                                <Link href={`/orders/${order.id}`} style={{ fontWeight: 700, color: 'var(--accent-primary)' }}>
+                                  {order.orderNumber}
+                                </Link>
+                              </td>
+                              <td>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                                  {order.items.map((item, i) => (
+                                    <span key={i} style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                                      {item.quantity}× {item.description}
+                                    </span>
+                                  ))}
+                                </div>
+                              </td>
+                              <td style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+                                {new Date(order.createdAt).toLocaleDateString('en-IN')}
+                              </td>
+                              <td>
+                                <StatusBadge status={order.status} />
+                              </td>
+                              <td className="text-right" style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
+                                ₹{order.totalAmount.toLocaleString('en-IN')}
+                              </td>
+                              <td className="text-right" style={{ fontWeight: 600, color: 'var(--accent-primary)' }}>
+                                ₹{order.paidAmount.toLocaleString('en-IN')}
+                              </td>
+                              <td className="text-right" style={{
+                                fontWeight: 800,
+                                color: order.paidAmount === 0 ? '#EF4444' : '#F59E0B'
+                              }}>
+                                ₹{order.dueAmount.toLocaleString('en-IN')}
+                                {order.paidAmount === 0 && (
+                                  <span style={{
+                                    display: 'block',
+                                    fontSize: '0.62rem',
+                                    fontWeight: 700,
+                                    color: '#EF4444',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.04em'
+                                  }}>
+                                    NO PAYMENT
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 )}
               </div>

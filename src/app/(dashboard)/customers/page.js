@@ -171,10 +171,10 @@ export default function CustomersPage() {
       />
 
       {/* Control bar */}
-      <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px', maxWidth: '500px', marginBottom: '8px' }}>
+      <form onSubmit={handleSearchSubmit} className="responsive-flex-wrap" style={{ maxWidth: '500px', marginBottom: '8px' }}>
         <input
           type="text"
-          className="input"
+          className="input mobile-w-full"
           placeholder="Search by customer name or phone number..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -281,10 +281,7 @@ export default function CustomersPage() {
                           </div>
                         </div>
                         
-                        <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                          gap: '16px',
+                        <div className="responsive-grid-2" style={{
                           marginBottom: '24px'
                         }}>
                           {customer.email && (
@@ -361,7 +358,7 @@ export default function CustomersPage() {
                         ) : customerOrders.length === 0 ? (
                           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>No orders recorded for this customer.</p>
                         ) : (
-                          <div style={{ overflowX: 'auto' }}>
+                          <div className="table-container">
                             <table className="table">
                               <thead>
                                 <tr>

@@ -381,16 +381,13 @@ export default function OrdersPage() {
       />
 
       {/* Control bar */}
-      <div style={{
-        display: 'flex',
+      <div className="responsive-flex-wrap" style={{
         justifyContent: 'space-between',
         alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '16px',
         marginBottom: '8px'
       }}>
         {/* Search & filters */}
-        <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px', flex: 1, maxWidth: '500px' }}>
+        <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px', flex: 1, minWidth: '280px', maxWidth: '500px' }}>
           <input
             type="text"
             className="input"
@@ -444,67 +441,69 @@ export default function OrdersPage() {
         <>
           {viewMode === 'list' ? (
             /* LIST VIEW */
-            <div className="glass-card" style={{ padding: '24px', overflowX: 'auto' }}>
+            <div className="glass-card table-container" style={{ padding: '24px' }}>
               {orders.length === 0 ? (
                 <div style={{ padding: '60px 0', textAlign: 'center' }}>
                   <span style={{ fontSize: '3rem' }}>📁</span>
-                  <p style={{ color: 'var(--text-muted)', marginTop: '16px' }}>No orders matching search criteria.</p>
+                  <p style={{ color: 'var(--text-muted)', margin: '16px 0 0 0' }}>No orders matching search criteria.</p>
                 </div>
               ) : (
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Order#</th>
-                      <th>Customer</th>
-                      <th>Items Summary</th>
-                      <th>Delivery Date</th>
-                      <th>Status</th>
-                      {isAdmin && <th className="text-right">Total</th>}
-                      {isAdmin && <th className="text-right">Due</th>}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orders.map((order) => (
-                      <tr key={order.id} style={{ cursor: 'pointer' }}>
-                        <td>
-                          <Link href={`/orders/${order.id}`} style={{ fontWeight: 700 }}>
-                            {order.orderNumber}
-                          </Link>
-                        </td>
-                        <td>
-                          <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{order.customer.name}</div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{order.customer.phone}</div>
-                        </td>
-                        <td className="truncate" style={{ maxWidth: '250px' }}>
-                          {order.items.map(i => `${i.quantity}x ${i.description}`).join(', ')}
-                        </td>
-                        <td>
-                          {new Date(order.deliveryDate).toLocaleDateString('en-IN', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric'
-                          })}
-                        </td>
-                        <td>
-                          <StatusBadge status={order.status} />
-                        </td>
-                        {isAdmin && (
-                          <td className="text-right" style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                            ₹{order.totalAmount}
-                          </td>
-                        )}
-                        {isAdmin && (
-                          <td className="text-right" style={{
-                            fontWeight: 600,
-                            color: order.dueAmount > 0 ? 'var(--accent-danger)' : 'var(--accent-success)'
-                          }}>
-                            ₹{order.dueAmount}
-                          </td>
-                        )}
+                <div className="table-container" style={{ margin: 0 }}>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Order#</th>
+                        <th>Customer</th>
+                        <th>Items Summary</th>
+                        <th>Delivery Date</th>
+                        <th>Status</th>
+                        {isAdmin && <th className="text-right">Total</th>}
+                        {isAdmin && <th className="text-right">Due</th>}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {orders.map((order) => (
+                        <tr key={order.id} style={{ cursor: 'pointer' }}>
+                          <td>
+                            <Link href={`/orders/${order.id}`} style={{ fontWeight: 700 }}>
+                              {order.orderNumber}
+                            </Link>
+                          </td>
+                          <td>
+                            <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{order.customer.name}</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{order.customer.phone}</div>
+                          </td>
+                          <td className="truncate" style={{ maxWidth: '250px' }}>
+                            {order.items.map(i => `${i.quantity}x ${i.description}`).join(', ')}
+                          </td>
+                          <td>
+                            {new Date(order.deliveryDate).toLocaleDateString('en-IN', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric'
+                            })}
+                          </td>
+                          <td>
+                            <StatusBadge status={order.status} />
+                          </td>
+                          {isAdmin && (
+                            <td className="text-right" style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
+                              ₹{order.totalAmount}
+                            </td>
+                          )}
+                          {isAdmin && (
+                            <td className="text-right" style={{
+                              fontWeight: 600,
+                              color: order.dueAmount > 0 ? 'var(--accent-danger)' : 'var(--accent-success)'
+                            }}>
+                              ₹{order.dueAmount}
+                            </td>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           ) : (
@@ -692,11 +691,7 @@ export default function OrdersPage() {
                   </select>
                 </div>
               ) : (
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                  gap: '16px'
-                }}>
+                <div className="responsive-grid-2">
                   <div className="form-group">
                     <label className="form-label">Full Name *</label>
                     <input
@@ -750,16 +745,7 @@ export default function OrdersPage() {
               <h3 style={{ fontSize: '1rem', margin: '0 0 12px 0', color: 'var(--accent-primary-hover)' }}>🛍️ Order Items</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {orderItems.map((item, index) => (
-                  <div key={index} className="order-item-row" style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1.2fr 2fr 0.6fr 0.8fr 1fr auto',
-                    gap: '12px',
-                    alignItems: 'end',
-                    background: 'rgba(15, 23, 42, 0.2)',
-                    padding: '12px',
-                    borderRadius: 'var(--radius-sm)',
-                    border: '1px solid rgba(255, 255, 255, 0.03)'
-                  }}>
+                  <div key={index} className="order-item-row">
                     {/* Product Selection */}
                     <div className="form-group">
                       <label className="form-label">Product Type</label>

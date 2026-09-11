@@ -142,7 +142,7 @@ export default function InventoryPage() {
       ) : (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
           gap: '24px'
         }} className="animate-slide-up">
           {inventory.length === 0 ? (
@@ -305,7 +305,7 @@ export default function InventoryPage() {
             </select>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div className="responsive-grid-2">
             <div className="form-group">
               <label className="form-label">Starting Quantity *</label>
               <input
